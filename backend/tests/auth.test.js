@@ -39,6 +39,7 @@ describe('Auth API', () => {
     const res = await request(app).post('/api/login').send(testUser);
     expect(res.statusCode).toBe(200);
     expect(res.body.token).toBeDefined();
+    expect(res.body.userType).toBeDefined();
   });
 
   it('POST /api/login should fail with wrong password', async () => {
@@ -49,5 +50,21 @@ describe('Auth API', () => {
   it('POST /api/login should fail with missing fields', async () => {
     const res = await request(app).post('/api/login').send({ username: '' });
     expect(res.statusCode).toBe(401);
+  });
+
+  it('POST /api/register should default to member userType when not provided', async () => {
+    const newUser = { username: 'newuser', password: 'newpass' };
+    await request(app).post('/api/register').send(newUser);
+    const loginRes = await request(app).post('/api/login').send(newUser);
+    expect(loginRes.statusCode).toBe(200);
+    expect(loginRes.body.userType).toBe('member');
+  });
+
+  it('POST /api/register should accept administrator userType', async () => {
+    const adminUser = { username: 'admin', password: 'admin', userType: 'administrator' };
+    await request(app).post('/api/register').send(adminUser);
+    const loginRes = await request(app).post('/api/login').send(adminUser);
+    expect(loginRes.statusCode).toBe(200);
+    expect(loginRes.body.userType).toBe('administrator');
   });
 });
