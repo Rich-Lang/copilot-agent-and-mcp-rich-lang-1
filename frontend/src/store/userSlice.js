@@ -17,7 +17,10 @@ const userSlice = createSlice({
       state.userType = action.payload.userType;
       localStorage.setItem('token', action.payload.token);
       localStorage.setItem('username', action.payload.username);
-      localStorage.setItem('userType', action.payload.userType);
+      // generated-by-copilot: Only store userType in localStorage if it's defined
+      if (action.payload.userType) {
+        localStorage.setItem('userType', action.payload.userType);
+      }
     },
     logout(state) {
       state.token = null;

@@ -23,9 +23,10 @@ function createAuthRouter({ usersFile, readJSON, writeJSON, SECRET_KEY }) {
     const users = readJSON(usersFile);
     const user = users.find(u => u.username === username && u.password === password);
     if (!user) return res.status(401).json({ message: 'Invalid credentials' });
-    // generated-by-copilot: Include userType in JWT payload and response
-    const token = jwt.sign({ username, userType: user.userType }, SECRET_KEY, { expiresIn: '1h' });
-    res.json({ token, userType: user.userType });
+    // generated-by-copilot: Include userType in JWT payload and response, default to 'member' for existing users
+    const userType = user.userType || 'member';
+    const token = jwt.sign({ username, userType }, SECRET_KEY, { expiresIn: '1h' });
+    res.json({ token, userType });
   });
 
   return router;

@@ -65,7 +65,7 @@ describe('Book Favorites App', () => {
     cy.get('input[name="password"]').type('password');
     cy.get('button#register').click();
     cy.contains('Registration successful! You can now log in.').should('exist');
-    // Wait for redirect to login page
+    // Verify redirect to login page
     cy.url().should('include', '/login');
     cy.get('input[name="username"]').type(memberUser);
     cy.get('input[name="password"]').type('password');
