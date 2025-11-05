@@ -16,5 +16,11 @@
       "20",
       "21"
     ]
+  },
+  {
+    "username": "newmember",
+    "password": "password123",
+    "userType": "member",
+    "favorites": []
   }
 ]

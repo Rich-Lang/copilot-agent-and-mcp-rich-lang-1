@@ -47,4 +47,28 @@ describe('Book Favorites App', () => {
     cy.visit('http://localhost:5173/books');
     cy.url().should('eq', 'http://localhost:5173/');
   });
+
+  it('should display user type next to username in header', () => {
+    // Login with sandra who is an administrator
+    cy.contains('Login').click();
+    cy.get('input[name="username"]').type('sandra');
+    cy.get('input[name="password"]').type('sandra');
+    cy.get('button#login').click();
+    // Check that user type is displayed next to username
+    cy.get('#user-info').should('contain', 'Hi, sandra (Administrator)');
+    cy.get('button#logout').click();
+    
+    // Test with a new member user
+    cy.contains('Create Account').click();
+    const memberUser = `member${Math.floor(Math.random() * 1000)}`;
+    cy.get('input[name="username"]').type(memberUser);
+    cy.get('input[name="password"]').type('password');
+    cy.get('button#register').click();
+    cy.wait(2000);
+    cy.get('input[name="username"]').type(memberUser);
+    cy.get('input[name="password"]').type('password');
+    cy.get('button#login').click();
+    // Check that new users default to member type
+    cy.get('#user-info').should('contain', `Hi, ${memberUser} (Member)`);
+  });
 });
