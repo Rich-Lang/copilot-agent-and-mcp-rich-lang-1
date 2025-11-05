@@ -9,6 +9,9 @@ on:
 jobs:
   test-and-build:
     runs-on: ubuntu-latest
+    permissions:
+      # generated-by-copilot: Required to checkout repository code
+      contents: read
 
     steps:
     - uses: actions/checkout@v4
