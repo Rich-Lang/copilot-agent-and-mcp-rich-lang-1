@@ -5,13 +5,15 @@ function createAuthRouter({ usersFile, readJSON, writeJSON, SECRET_KEY }) {
   const router = express.Router();
 
   router.post('/register', (req, res) => {
-    const { username, password } = req.body;
+    const { username, password, userType } = req.body;
     if (!username || !password) return res.status(400).json({ message: 'Username and password required' });
     const users = readJSON(usersFile);
     if (users.find(u => u.username === username)) {
       return res.status(409).json({ message: 'User already exists' });
     }
-    users.push({ username, password, favorites: [] });
+    // generated-by-copilot: Default to 'member' if userType is not provided
+    const finalUserType = userType || 'member';
+    users.push({ username, password, userType: finalUserType, favorites: [] });
     writeJSON(usersFile, users);
     res.status(201).json({ message: 'User registered' });
   });
@@ -21,8 +23,10 @@ function createAuthRouter({ usersFile, readJSON, writeJSON, SECRET_KEY }) {
     const users = readJSON(usersFile);
     const user = users.find(u => u.username === username && u.password === password);
     if (!user) return res.status(401).json({ message: 'Invalid credentials' });
-    const token = jwt.sign({ username }, SECRET_KEY, { expiresIn: '1h' });
-    res.json({ token });
+    // generated-by-copilot: Include userType in JWT payload and response, default to 'member' for existing users
+    const userType = user.userType || 'member';
+    const token = jwt.sign({ username, userType }, SECRET_KEY, { expiresIn: '1h' });
+    res.json({ token, userType });
   });
 
   return router;
