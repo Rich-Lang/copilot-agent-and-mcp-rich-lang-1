@@ -71,7 +71,7 @@ const Header = () => {
             </a>
           </nav>
           <span id="user-info" style={{ color: '#fff', fontWeight: 600, whiteSpace: 'nowrap', display: 'inline-block' }}>
-            Hi, {username} ({formattedUserType})
+            Hi, {username}{userType && ` (${formattedUserType})`}
           </span>
           <button id="logout" onClick={handleLogout} style={{ padding: '0.3rem 1rem', fontSize: '1rem', background: '#fff', color: '#20b2aa', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Logout</button>
         </div>
